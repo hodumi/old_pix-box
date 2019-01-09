@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+    <head>
+	<title>Pix-Box</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<style type="text/css">
+	 html, body {
+	     height: 100%;
+	     margin: 0;
+	 }
+	</style>
+    </head>
+    <body>
+	<!-- place the custom tag anywhere inside the body -->
+	<!-- <image-list></image-list>
+	     <image-view></image-view>
+	-->
+	<app-main></app-main>
+
+	<!-- include the tag -->
+		
+	<script type="riot/tag" src="imageList.tag"></script>
+	<script type="riot/tag" src="imageDetail.tag"></script>
+	<script type="riot/tag" src="app-main.tag"></script>
+
+	
+	<!-- include riot.js -->
+	<script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/riot-route@3.1.4/dist/route.min.js"></script>
+
+	<!-- mount the tag -->
+	<script>
+	 riot.compile(function() {
+             riot.mount('app-main')
+             route.start(true)
+	 })
+	</script>
+	<!-- <script>riot.mount('image-view')</script> -->
+    </body>
+</html>
