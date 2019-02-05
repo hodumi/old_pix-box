@@ -46,7 +46,7 @@
 	  (let ((images (pix-box.image:image-list)))
 	    (list 200 `(:content-type "application/json")
 		  (list (to-response-json   
-			 ("images" images) 
+			 ("images" images)
 			 ))))))
 
 (setf (ningle:route *app* "/api/images/:file" :method :get)
@@ -56,13 +56,15 @@
 			  `(200 (:content-type ,(image-content-type file)) ,anaphora:it)
 			  `(404 (:content-type "text/plain") ("not found"))))))
 
-
 ;; VIEW ------------------------------------------------
 
 ; TODO: favicon.ico
 
 (setf (ningle:route *app* "/")
       `(200 (:content-type "text/html") ,(pimg:image-pathname "../html/index.html") ))
+
+(setf (ningle:route *app* "/reset.min.css")
+      `(200 (:content-type "text/css; charset=UTF-8") ,(pimg:image-pathname "../css/rest.min.css") ))
 
 (setf (ningle:route *app* "/*.*")
       #'(lambda (params)

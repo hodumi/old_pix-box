@@ -3,6 +3,7 @@
     <div class="image-detail">
 	<div class="image-detail-controls">
 	    <a class="image-detail-close" href="#"></a>
+	    <a class="image-detail-left" onclick="prev()"></a>
 	</div>
 	<img class="image-detail-image" alt={ url } src={ url }/>
     </div>
@@ -20,6 +21,10 @@
      hide() {
 	 /* $('.image-detail-image').attr('src', ''); */
 	 $('.image-detail').hide();
+     }
+
+     prev() {
+	 console.log('foo');
      }
     </script>
 
@@ -40,6 +45,10 @@
      .image-detail-close {
 	 grid-row: 1;
 	 grid-column: 2;
+     }
+     .image-detail-left {
+	 grid-row: 2;
+	 grid-column: 1;
      }
      .image-detail {
 	 display: flex;
