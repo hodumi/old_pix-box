@@ -14,6 +14,8 @@
     )
 (in-package :pix-box.web)
 
+
+
 ;;; JSON ==============================================
 (eval-when (:compile-toplevel :execute)
   (defmacro to-response-json (&rest responses)
@@ -24,6 +26,11 @@
 (defmethod JSOWN:TO-JSON ((p pathname))
   (JSOWN:TO-JSON (namestring p)))
 
+;;; Resources =========================================
+(defvar +resource-path+ (merge-pathnames #P"resource/" (asdf:system-source-directory :pix-box)))
+
+(defun resource-pathname (name &key (directory +resource-path+))
+  (probe-file (merge-pathnames name directory)))
 
 ;;; IMAGE =============================================
 (defun image-content-type (file)
@@ -61,15 +68,15 @@
 ; TODO: favicon.ico
 
 (setf (ningle:route *app* "/")
-      `(200 (:content-type "text/html") ,(pimg:image-pathname "../html/index.html") ))
+      `(200 (:content-type "text/html") ,(resource-pathname "html/index.html") ))
 
 (setf (ningle:route *app* "/reset.min.css")
-      `(200 (:content-type "text/css; charset=UTF-8") ,(pimg:image-pathname "../css/rest.min.css") ))
+      `(200 (:content-type "text/css; charset=UTF-8") ,(resource-pathname "css/rest.min.css") ))
 
 (setf (ningle:route *app* "/*.*")
       #'(lambda (params)
-	  (anaphora:aif (pimg:image-pathname (concatenate 'string
-							  "../html/"
+	  (anaphora:aif (resource-pathname (concatenate 'string
+							  "html/"
 							  (first (cdr (assoc :splat params)))
 							  "."
 							  (second (cdr (assoc :splat params)))
