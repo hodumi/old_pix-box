@@ -3,7 +3,8 @@
     <div class="image-detail">
 	<div class="image-detail-controls">
 	    <a class="image-detail-close" href="#"></a>
-	    <a class="image-detail-left" onclick="prev()"></a>
+	    <a class="image-detail-left" href="#detail/{ prev }"></a>
+	    <a class="image-detail-right" href="#detail/{ next }"></a>
 	</div>
 	<img class="image-detail-image" alt={ url } src={ url }/>
     </div>
@@ -13,18 +14,17 @@
      self.url = "";
 
      show(file) {
-	 console.log(file);
-	 self.update({ url:  "/api/images/" + file });
+	 $.getJSON( "api/images/" + file + "/info.json", function( data ) {
+	     this.update(data);
+	 }.bind(this));
+
+	 self.update({url: "/api/images/" + file});
 	 $('.image-detail').show();
      }
 
      hide() {
-	 /* $('.image-detail-image').attr('src', ''); */
+	 /* 詳細を閉じる */
 	 $('.image-detail').hide();
-     }
-
-     prev() {
-	 console.log('foo');
      }
     </script>
 
@@ -49,6 +49,10 @@
      .image-detail-left {
 	 grid-row: 2;
 	 grid-column: 1;
+     }
+     .image-detail-right {
+	 grid-row: 2;
+	 grid-column: 3;
      }
      .image-detail {
 	 display: flex;

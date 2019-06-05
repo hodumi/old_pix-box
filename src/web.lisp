@@ -18,7 +18,7 @@
 
 ;;; JSON ==============================================
 (eval-when (:compile-toplevel :execute)
-  (defmacro to-response-json (&rest responses)
+  (defmacro to-response-json (responses)
     `(jsown:to-json (jsown:new-js ,@responses)))
 
   )
@@ -53,15 +53,24 @@
 	  (let ((images (pix-box.image:image-list)))
 	    (list 200 `(:content-type "application/json")
 		  (list (to-response-json   
-			 ("images" images)
+			 (("images" images))
 			 ))))))
 
-(setf (ningle:route *app* "/api/images/:file" :method :get)
+(setf (ningle:route *app* "/api/images/:key/info.json" :method :get)
       #'(lambda (params)
-	  (let ((file (cdr (assoc :file params))))
-	    (ANAPHORA:aif (pimg:image-pathname file) 
-			  `(200 (:content-type ,(image-content-type file)) ,anaphora:it)
-			  `(404 (:content-type "text/plain") ("not found"))))))
+	  (let* ((info (pimg:image-info (cdr (assoc :key params)))))
+	    (list 200 `(:content-type "application/json")
+		  (list (JSOWN:TO-JSON `(:obj ,@info)))))))
+			 
+      
+
+(setf (ningle:route *app* "/api/images/:key" :method :get)
+      #'(lambda (params)
+	  (let* ((file (cdr (assoc :key params))))
+	    (ANAPHORA:aif (pimg:image-pathname file)
+	  		  `(200 (:content-type ,(image-content-type file)) ,anaphora:it)
+	  		  `(404 (:content-type "text/plain") ("not found this request"))))
+      ))
 
 ;; VIEW ------------------------------------------------
 
