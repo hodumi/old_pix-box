@@ -8,8 +8,8 @@
     (:import-from :pix-box.image
 		  #:image-list
 		  #:image-pathname)
-    (:export #:start-server
-	     #:stop-server
+    (:export #:start
+	     #:stop
 	     )
     )
 (in-package :pix-box.web)
@@ -44,7 +44,6 @@
 
 ;;; SERVER ===============================================
 (defvar *app* (make-instance 'ningle:app))
-(defvar *server* nil)
 
 ;; API ---------------------------------------------------
 (setf (ningle:route *app* "/api/images.json" :method :get)
@@ -91,10 +90,27 @@
 							  (second (cdr (assoc :splat params)))
 							  ))
 			`(200 (:content-type "text/html") ,anaphora:it)
-			`(404 (:content-type "text/plain") ("not found")))))      
-(defun start-server ()
-  (setq *server* (clack:clackup *app*)))
+			`(404 (:content-type "text/plain") ("not found")))))
 
-(defun stop-server ()
-  (setq *server* (clack:stop *server*)))
+;; Start & Stop -----------------------------------
 
+(defvar *handler* nil)
+
+(defvar *appfile-path*
+  (asdf:system-relative-pathname :pix-box #P"web.lisp"))
+
+
+(defun start (&key server port debug &allow-other-keys)
+  (declare (ignore server port debug))
+  (when *handler*
+    (restart-case (error "Server is already running.")
+      (restart-server ()
+        :report "Restart the server"
+        (stop))))
+  (setf *handler*
+        (clack:clackup *app*)))
+
+(defun stop ()
+  (prog1
+      (clack:stop *handler*)
+    (setf *handler* nil)))
