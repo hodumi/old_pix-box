@@ -8,12 +8,11 @@ exec ros -Q -- $0 "$@"
   ;;#+quicklisp(ql:quickload '() :silent t)
   )
 
-(defpackage :ros.script.run-pix-box.3755654309
+(defpackage :ros.script.start.3771490674
   (:use :cl))
-(in-package :ros.script.run-pix-box.3755654309)
+(in-package :ros.script.start.3771490674)
 
-
-(pushnew (make-pathname :directory (sb-posix:getcwd)) asdf:*central-registry*)
+(ql:quickload :pix-box-server)
 
 (ql:quickload :pix-box)
 (ql:quickload :swank)
@@ -22,9 +21,10 @@ exec ros -Q -- $0 "$@"
 
 (defun main (&rest argv)
   (declare (ignorable argv))
-  (pix-box.web:start )
-  (swank:create-server :port 4005 :style :spawn :dont-close t)
-  (loop (sleep 3600))
-  )
 
+  (pix-box.web:start :port pix-box-server:+http-port+)
+  (swank:create-server :port pix-box-server:+swank-port+ :style :spawn :dont-close t)
+  (loop (sleep 3600))
+
+  )
 ;;; vim: set ft=lisp lisp:

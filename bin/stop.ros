@@ -1,0 +1,25 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.stop.3771662673
+  (:use :cl))
+(in-package :ros.script.stop.3771662673)
+
+(ql:quickload :swank-client)
+(ql:quickload :pix-box-server)
+(ql:quickload :pix-box)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (swank-client:with-slime-connection (conn "localhost" pix-box-server:+swank-port+) 
+    (swank-client:slime-eval (quote (handler-bind ((error (function continue))) (pix-box.web:stop))) conn)) 
+  (sb-ext:quit)
+  )
+;;; vim: set ft=lisp lisp:
